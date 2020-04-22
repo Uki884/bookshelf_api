@@ -10,7 +10,7 @@ class BookSerializer(ModelSerializer):
             'id',
             'title',
             'author',
-            'cover',  # モデルには存在しない追加する新フィールド
+            'cover',
             'isbn',
             'price',
             'publisher',
@@ -22,18 +22,17 @@ class BookSerializer(ModelSerializer):
 
     # def get_bookShelf(self, instance):
     #     return BookShelfSerialiser(BookShelf.objects.all()).data
-class BookShelfSerialiser(ModelSerializer):
-    books = SerializerMethodField()
+
+
+class BookShelfSerializer(ModelSerializer):
+    books = BookSerializer(many=True)
     class Meta:
         model = BookShelf
         fields = [
             'id',
             'name',
             'description',
-            'books',  # モデルには存在しない追加する新フィールド
+            'books'
         ]
-
-    def get_books(self, instance):
-        return BookSerializer(Book.objects.get()).data
 
 

@@ -22,7 +22,7 @@ class Book(models.Model):
     image = models.ImageField(verbose_name='アップロード画像', blank=True, null=True, upload_to='images/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    bookShelf = models.ForeignKey(BookShelf, verbose_name='本棚', related_name='bookShelf', blank=True, null=True, on_delete=models.CASCADE)
+    bookShelf = models.ForeignKey(BookShelf, verbose_name='本棚', related_name='books', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
