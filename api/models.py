@@ -9,6 +9,9 @@ class BookShelf(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=120)
 
+    def __str__(self):
+        return self.name
+
 class Book(models.Model):
     title = models.CharField(verbose_name='タイトル', max_length=120)
     author = models.CharField(verbose_name='著者', max_length=120)
@@ -20,3 +23,6 @@ class Book(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     bookShelf = models.ForeignKey(BookShelf, verbose_name='本棚', related_name='bookShelf', blank=True, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
