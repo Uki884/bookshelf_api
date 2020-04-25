@@ -1,9 +1,19 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from .models import BookShelf, Book
+from .models import BookShelf, Book, BookPosition
 
+
+class BookPositionSerializer(ModelSerializer):
+    # bookShelf = SerializerMethodField()
+    class Meta:
+        model = BookPosition
+        fields = [
+            'id',
+            'row_no',
+            'column_no',
+        ]
 
 class BookSerializer(ModelSerializer):
-    # bookShelf = SerializerMethodField()
+    bookPosition = BookPositionSerializer()
     class Meta:
         model = Book
         fields = [
@@ -18,10 +28,8 @@ class BookSerializer(ModelSerializer):
             'created_at',
             'updated_at',
             'bookShelf',
+            'bookPosition'
         ]
-
-    # def get_bookShelf(self, instance):
-    #     return BookShelfSerialiser(BookShelf.objects.all()).data
 
 
 class BookShelfSerializer(ModelSerializer):
@@ -34,5 +42,6 @@ class BookShelfSerializer(ModelSerializer):
             'description',
             'books'
         ]
+
 
 

@@ -12,6 +12,13 @@ class BookShelf(models.Model):
     def __str__(self):
         return self.name
 
+class BookPosition(models.Model):
+    column_no = models.IntegerField(verbose_name='本の列')
+    row_no = models.IntegerField(verbose_name='本の行')
+
+    def __str__(self):
+        return str(self.id)
+
 class Book(models.Model):
     title = models.CharField(verbose_name='タイトル', max_length=120)
     author = models.CharField(verbose_name='著者', max_length=120)
@@ -23,6 +30,7 @@ class Book(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     bookShelf = models.ForeignKey(BookShelf, verbose_name='本棚', related_name='books', blank=True, null=True, on_delete=models.CASCADE)
-
+    bookPosition = models.OneToOneField(BookPosition, verbose_name='本の位置', blank=True, null=True, related_name='position', on_delete=models.CASCADE)
     def __str__(self):
         return self.title
+
