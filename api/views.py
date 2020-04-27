@@ -43,5 +43,6 @@ class BookViewSet(viewsets.ModelViewSet):
             )
             return Response(request.data, status=200)
         except Exception as e:
-            return Response(e, status=500)
+            print(e)
+            return Response(request.data, status=500)
 
