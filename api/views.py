@@ -22,7 +22,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Book.objects.all()
-        queryset = queryset.filter(bookShelf__isnull=True)
+        # queryset = queryset.filter(bookShelf__isnull=True)
         return queryset
 
     def create(self, request):
