@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.apps.ApiConfig',
     'corsheaders',
-    'django_extensions'
+    'django_extensions',
+    'sslserver'
 ]
 
 MIDDLEWARE = [
@@ -57,10 +58,16 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8081',
-    'http://192.168.0.4:8081'
+    'http://192.168.0.4:8081',
+    'https://192.168.0.4:8081'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'bookshelf_api.urls'
 
