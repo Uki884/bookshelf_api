@@ -59,7 +59,8 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8081',
     'http://192.168.0.4:8081',
-    'https://192.168.0.4:8081'
+    'https://192.168.0.4:8081',
+    'https://ecstatic-splice-274712.an.r.appspot.com/'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -138,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # For debugging
 if DEBUG:
