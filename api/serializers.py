@@ -33,7 +33,7 @@ class BookSerializer(ModelSerializer):
 
 
 class BookShelfSerializer(ModelSerializer):
-    books = BookSerializer(many=True)
+    books = BookSerializer(many=True, required=False)
     class Meta:
         model = BookShelf
         fields = [
