@@ -60,7 +60,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8081',
     'http://192.168.0.4:8081',
     'https://192.168.0.4:8081',
-    'https://ecstatic-splice-274712.an.r.appspot.com/'
+    'https://ecstatic-splice-274712.an.r.appspot.com'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -94,12 +94,26 @@ WSGI_APPLICATION = 'bookshelf_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+if os.getenv('GAE_APPLICATION', None):
+    # Running on production App Engine, so connect to Google Cloud SQL using
+    # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '/cloudsql/ecstatic-splice-274712:asia-northeast1:root',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'NAME': 'bookshelf',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation

@@ -7,6 +7,7 @@ from .serializers import BookShelfSerializer, BookSerializer, BookPositionSerial
 import django_filters
 from rest_framework import viewsets, filters
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 # Create your views here.
 
@@ -26,7 +27,6 @@ class BookViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request):
-        print(request.data)
         try:
             bookShelf = BookShelf.objects.get(id=request.data['bookShelf'])
             bookPosition = BookPosition.objects.create(column_no=request.data['column_no'], row_no=request.data['row_no'])
@@ -46,3 +46,13 @@ class BookViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(request.data, status=500)
 
+    @action(detail=False, methods=['patch'])
+    def edit_book_position(self, request):
+        bookPositions = request.data
+        for bookPosition in bookPositions:
+            book = Book.objects.get(id=bookPosition['id'])
+            position = BookPosition.objects.get(id=book.bookPosition.id)
+            position.column_no = bookPosition['column_no']
+            position.row_no = bookPosition['row_no']
+            position.save()
+        return Response(request.data, status=200)
