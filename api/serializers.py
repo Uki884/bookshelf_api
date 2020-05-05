@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import BookShelf, Book, BookPosition
-
+from rest_auth.models import TokenModel
+from rest_framework.authtoken.models import Token
 
 class BookPositionSerializer(ModelSerializer):
     # bookShelf = SerializerMethodField()
@@ -44,4 +45,8 @@ class BookShelfSerializer(ModelSerializer):
         ]
 
 
+class CustomTokenSerializer(ModelSerializer):
+    class Meta:
+        model = TokenModel
+        fields = ('key', 'user')
 
