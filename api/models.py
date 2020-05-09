@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 class BookShelf(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=120)
+    user = models.ForeignKey(User, verbose_name='本棚の所持者', related_name='user_bookshelf', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

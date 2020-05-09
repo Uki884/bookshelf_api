@@ -35,14 +35,9 @@ class BookSerializer(ModelSerializer):
         ]
 
 
-class UserSerializer(ModelSerializer):
-    user_books = BookSerializer(many=True)
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'user_books')
-
 class BookShelfSerializer(ModelSerializer):
     books = BookSerializer(many=True, required=False)
+
     class Meta:
         model = BookShelf
         fields = [
@@ -52,6 +47,12 @@ class BookShelfSerializer(ModelSerializer):
             'books'
         ]
 
+class UserSerializer(ModelSerializer):
+    user_books = BookSerializer(many=True)
+    user_bookshelf = BookShelfSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'user_books', 'user_bookshelf')
 
 class CustomTokenSerializer(ModelSerializer):
     class Meta:
