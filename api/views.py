@@ -21,6 +21,18 @@ class BookShelfViewSet(viewsets.ModelViewSet):
     queryset = BookShelf.objects.all()
     serializer_class = BookShelfSerializer
 
+    def create(self, request):
+        user = User.objects.get(id=request.data['user'])
+        try:
+            book = BookShelf.objects.create(
+                description=request.data['description'],
+                name=request.data['name'],
+                user=user
+            )
+            return Response(request.data, status=200)
+        except Exception as e:
+            print(e)
+            return Response(request.data, status=500)
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
