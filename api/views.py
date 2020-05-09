@@ -9,6 +9,7 @@ from rest_framework import viewsets, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -16,6 +17,13 @@ from django.contrib.auth.models import User
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    @action(detail=True, methods=['get'])
+    def get_user_book(self, request, pk):
+        user = User.objects.get(id=pk)
+        serializer = UserSerializer(user)
+        print(serializer.data['user_bookshelf'])
+        return Response(serializer.data['user_bookshelf'], status=200)
 
 class BookShelfViewSet(viewsets.ModelViewSet):
     queryset = BookShelf.objects.all()
