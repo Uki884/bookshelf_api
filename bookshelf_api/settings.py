@@ -72,15 +72,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8081',
-    'http://192.168.0.4:8081',
-    'https://192.168.0.4:8081',
-    'https://ecstatic-splice-274712.an.r.appspot.com'
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:8081',
+#     'http://192.168.0.4:8081',
+#     'https://192.168.0.4:8081',
+#     'https://ecstatic-splice-274712.an.r.appspot.com',
+#     'https://ecstatic-splice-274712.an.r.appspot.com/'
+# ]
 
 CORS_ALLOW_CREDENTIALS = True
-
+CORS_ORIGIN_ALLOW_ALL = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = False
@@ -110,7 +111,6 @@ WSGI_APPLICATION = 'bookshelf_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-
 if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
@@ -126,8 +126,11 @@ if os.getenv('GAE_APPLICATION', None):
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '127.0.0.1',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'NAME': 'bookshelf',
         }
     }
 

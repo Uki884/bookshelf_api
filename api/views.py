@@ -22,7 +22,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_user_book(self, request, pk):
         user = User.objects.get(id=pk)
         serializer = UserSerializer(user)
-        print(serializer.data['user_bookshelf'])
         return Response(serializer.data['user_bookshelf'], status=200)
 
 class BookShelfViewSet(viewsets.ModelViewSet):
