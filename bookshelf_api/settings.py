@@ -167,14 +167,16 @@ AUTHENTICATION_BACKENDS = (
 )
 
 REST_AUTH_REGISTER_SERIALIZERS = {
-    'TOKEN_SERIALIZER': 'api.serializers.CustomTokenSerializer'
+    'TOKEN_SERIALIZER': 'api.serializers.CustomTokenSerializer',
+    # 'REGISTER_SERIALIZER': 'api.serializers.RegisterSerializer',
 }
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
