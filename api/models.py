@@ -2,12 +2,14 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 class BookShelf(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=120)
+    user = models.ForeignKey(User, verbose_name='本棚の所持者', related_name='user_bookshelf', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -31,6 +33,7 @@ class Book(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     bookShelf = models.ForeignKey(BookShelf, verbose_name='本棚', related_name='books', blank=True, null=True, on_delete=models.CASCADE)
     bookPosition = models.OneToOneField(BookPosition, verbose_name='本の位置', blank=True, null=True, related_name='position', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='本登録者', related_name='user_books', blank=True, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.title
 

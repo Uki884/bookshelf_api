@@ -3,19 +3,43 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from .models import BookShelf, Book, BookPosition
-from .serializers import BookShelfSerializer, BookSerializer, BookPositionSerializer
+from .serializers import BookShelfSerializer, BookSerializer, BookPositionSerializer, UserSerializer
 import django_filters
 from rest_framework import viewsets, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 # Create your views here.
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @action(detail=True, methods=['get'])
+    def get_user_book(self, request, pk):
+        user = User.objects.get(id=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data['user_bookshelf'], status=200)
 
 class BookShelfViewSet(viewsets.ModelViewSet):
     queryset = BookShelf.objects.all()
     serializer_class = BookShelfSerializer
 
+    def create(self, request):
+        user = User.objects.get(id=request.data['user'])
+        try:
+            book = BookShelf.objects.create(
+                description=request.data['description'],
+                name=request.data['name'],
+                user=user
+            )
+            return Response(request.data, status=200)
+        except Exception as e:
+            print(e)
+            return Response(request.data, status=500)
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()

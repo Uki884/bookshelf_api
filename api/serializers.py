@@ -1,6 +1,14 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import BookShelf, Book, BookPosition
+from rest_auth.models import TokenModel
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 
+from rest_framework import serializers
+from allauth.account import app_settings as allauth_settings
+from allauth.utils import email_address_exists, get_username_max_length
+from allauth.account.adapter import get_adapter
+from allauth.account.utils import setup_user_email
 
 class BookPositionSerializer(ModelSerializer):
     # bookShelf = SerializerMethodField()
@@ -28,12 +36,13 @@ class BookSerializer(ModelSerializer):
             'created_at',
             'updated_at',
             'bookShelf',
-            'bookPosition'
+            'bookPosition',
         ]
 
 
 class BookShelfSerializer(ModelSerializer):
     books = BookSerializer(many=True, required=False)
+
     class Meta:
         model = BookShelf
         fields = [
@@ -43,5 +52,61 @@ class BookShelfSerializer(ModelSerializer):
             'books'
         ]
 
+class UserSerializer(ModelSerializer):
+    user_books = BookSerializer(many=True)
+    user_bookshelf = BookShelfSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'user_books', 'user_bookshelf')
 
+class CustomTokenSerializer(ModelSerializer):
+    class Meta:
+        model = TokenModel
+        fields = ('key', 'user')
+
+
+class RegisterSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    username = serializers.CharField(
+        max_length=get_username_max_length(),
+        min_length=allauth_settings.USERNAME_MIN_LENGTH,
+        required=allauth_settings.USERNAME_REQUIRED
+    )
+    # first_name = serializers.CharField(required=False, write_only=True)
+    # last_name = serializers.CharField(required=False, write_only=True)
+    password1 = serializers.CharField(required=True, write_only=True)
+    password2 = serializers.CharField(required=True, write_only=True)
+
+    def validate_email(self, email):
+        email = get_adapter().clean_email(email)
+        if allauth_settings.UNIQUE_EMAIL:
+            if email and email_address_exists(email):
+                raise serializers.ValidationError(("このメールアドレスは既に登録されています。"))
+        return email
+
+    def validate_password1(self, password):
+        return get_adapter().clean_password(password)
+
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError(("確認用パスワードが間違っています。"))
+        return data
+
+    def get_cleaned_data(self):
+        return {
+            'first_name': self.validated_data.get('first_name', ''),
+            'last_name': self.validated_data.get('last_name', ''),
+            'password1': self.validated_data.get('password1', ''),
+            'password2': self.validated_data.get('password2', ''),
+            'email': self.validated_data.get('email', ''),
+        }
+
+    def save(self, request):
+        adapter = get_adapter()
+        user = adapter.new_user(request)
+        self.cleaned_data = self.get_cleaned_data()
+        adapter.save_user(request, user, self)
+        setup_user_email(request, user, [])
+        user.save()
+        return user
 
